@@ -50,7 +50,8 @@ nav ul{
     padding: 0px;
 }
 
-nav ul li a{
+nav ul li a,
+nav p{
     height: 40px;
     line-height: 43px;
     margin: 8px;
@@ -67,6 +68,18 @@ nav ul li a:hover{
     background-color: #8be9fd;
     color: #44475a;
     box-shadow: 2px 5px 15px rgba(139,233,253,0.5);
+    transition: all ease 0.2s;
+}
+
+nav p{
+    color: #44475a;
+    background-color: #bd93f9;
+}
+
+nav p:hover{
+    color: #44475a;
+    background-color: #bd93f9;
+    box-shadow: 2px 5px 15px rgba(189,147,249,0.5);
     transition: all ease 0.2s;
 }
 
