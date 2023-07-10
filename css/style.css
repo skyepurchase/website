@@ -34,6 +34,22 @@ a:hover{
 .logo img{
     height: 20px;
 }
+
+.horizontal {
+    display: block;
+    height: 50vh;
+    width: auto;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.vertical {
+    display: block;
+    height: 50vh;
+    width: auto;
+    margin-left: auto;
+    margin-right: auto;
+}
 /*}}}*/
 
 /* navigation {{{*/
@@ -373,6 +389,24 @@ nav .menu-btn{
     display: block;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+/*}}}*/
+
+/* images {{{ */
+figure {
+    padding: 4px;
+    margin: auto;
+}
+
+figcaption {
+    background-color: #282a36;
+    color: #8be9fd;
+    font-style: italic;
+    padding: 2px;
+    text-align: center;
+}
+
+img {
 }
 /*}}}*/
 
