@@ -201,21 +201,33 @@ nav .menu-btn{
 }
 
 .main-login{
-    width: 120px;
+    width: 150px;
     height: 40px;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #6272a4;
-    color: #f8f8f2;
-    box-shadow: 5px 10px 30px rgba(189,147,249,0.13);
+    border: 2px solid #bd93f9;
     text-transform: uppercase;
+    margin: auto;
+    border-radius: 5px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #bd93f9;
 }
 
 .main-login:hover{
     background-color: #bd93f9;
-    color: #282a36;
+    color: #44475a;
+    box-shadow: 5px 10px 30px rgba(189,147,249,0.5);
     transition: all ease 0.3s;
+}
+
+.blink{
+    animation: blinker 1s linear infinite;
+}
+
+@keyframes blinker {
+    50% { opacity: 0; }
 }
 /*}}}*/
 
