@@ -90,24 +90,24 @@ nav p {
 
 nav ul li a::before {
     content: "";
-    background-color: #6272a4;
+    background-color: #bd93f9;
     position: absolute;
     left: 0;
     bottom: 8px;
     width: 100%;
-    height: 3px;
+    height: 0px;
     z-index: -1;
     transform: scaleX(0.66);
     transition: all .3s ease-in-out;
 }
 
-nav a:hover::before {
+nav ul li a:hover::before {
     background-color: #bd93f9;
     bottom: 0;
     height: 100%;
     width: 100%;
     transform: scaleX(1);
-    box-shadow: 2px 5px 15px rgba(139,233,253,0.5);
+    box-shadow: 2px 5px 15px #bd93f988;
 }
 
 nav ul li a:hover {
@@ -129,14 +129,25 @@ nav .blog {
 }
 
 nav .blog::before {
-    visibility: hidden;
+    content: "";
+    background-color: #8be9fd;
+    position: absolute;
+    left: 0;
+    bottom: 8px;
+    width: 100%;
+    height: 0px;
+    z-index: -1;
+    transform: scaleX(0.66);
+    transition: all .3s ease-in-out;
 }
 
-nav .blog:hover {
+nav .blog:hover::before {
     background-color: #8be9fd;
-    color: #44475a;
-    box-shadow: 2px 5px 15px rgba(139,233,253,0.5);
-    transition: all ease 0.2s;
+    bottom: 0;
+    height: 100%;
+    width: 100%;
+    transform: scaleX(1);
+    box-shadow: 2px 5px 15px #8be9fd88;
 }
 
 nav p {
