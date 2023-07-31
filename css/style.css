@@ -420,6 +420,12 @@ nav .menu-btn {
     box-shadow: 5px 10px 30px #bd93f988;
     transition: all ease 0.3s;
 }
+
+.box ul {
+    display: flex;
+    margin: 0px;
+    padding: 0px;
+}
 /*}}}*/   
 
 /*Link backs {{{ */
@@ -430,6 +436,7 @@ nav .menu-btn {
     justify-content: center;
     align-items: center;
     border: 0px;
+    padding: 0px 22px;
     text-transform: uppercase;
     margin: auto;
     border-radius: 5px;
