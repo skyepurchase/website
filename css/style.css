@@ -489,6 +489,10 @@ nav .menu-btn {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+.post {
+    padding-left: 50px;
+}
 /*}}}*/
 
 /* images {{{ */
