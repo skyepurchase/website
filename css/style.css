@@ -211,6 +211,18 @@ nav .menu-btn {
     color: #f8f8f2;
 }
 
+.home-text ul {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0px;
+    padding: 0px;
+}
+
+.home-text li {
+    padding: 0px 10px;
+}
+
 .main-login {
     width: 150px;
     height: 40px;
@@ -451,6 +463,7 @@ nav .menu-btn {
     box-shadow: 5px 10px 30px #bd93f988;
     transition: all ease 0.3s;
 }
+
 .linkback img {
    min-width: 100%;
    min-height: 100%;
