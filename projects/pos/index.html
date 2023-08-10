@@ -15,7 +15,66 @@
         <img src="https://github-readme-stats.vercel.app/api/pin/?username=skyepurchase&repo=POS&theme=dracula&hide_border=false"/>
         </a></p>
         <p>The first project listed on my website!</p>
-        <p>10-07-2023</p>
+        <p>04-08-2023</p>
+        <hr />
+        <h2 id="project-log">Project Log</h2>
+        <hr />
+        <p>Slow progress as I struggled to open a file in C using Clang
+        as the compiler. Switching to GCC resulted in the code working
+        as I had assumed. I will look into the issue further and
+        hopefully gain a better understanding of the differences.</p>
+        <p>Since this change I have implemented a basic file handler in
+        <code>file_handler.c</code> and finished a tokenizer in
+        <code>parser.c</code>.</p>
+        <p>The AST for brainf**k is basically just a sequence except for
+        the loops which are simple
+        <code>do ...; x--; while x != 0</code>. This constitutes the
+        only control flow in brainf**k, but the language is still Turing
+        complete and can be seen in comparison to <em><a
+        href="https://en.wikipedia.org/wiki/Register_machine">register
+        machines</a></em> (RMs).</p>
+        <p>The major difference is that RMs use a form of
+        <code>goto</code> rather than loops where control flow happens
+        on decriment. A decriment operation in an RM is written as such:
+        <code>Rx- L1 L2</code> where <code>x</code> is the register
+        number and <code>Lx</code> is a label to go to. If the contents
+        of <code>Rx</code> are zero jump to <code>L2</code> otherwise
+        decriment <code>Rx</code> and jump to <code>L1</code>. <em>note
+        that increment still contains a label <code>Rx+ L1</code> and so
+        instructions are not necessary sequential.</em></p>
+        <p>Before writing a compiler to 6502 machine code I want to
+        write a transpiler from brainf**k to RM. From brainf**k to RM
+        this should be fairly trivial as <code>++[&gt;++&lt;]</code>
+        becomes</p>
+        <pre><code>L0 R0+ L1       +
+L1 R0+ L2       +
+
+L2 R1+ L3       [&gt;+
+L3 R1+ L4       +
+L4 R0- L2 L5    &lt;]
+
+L5 HALT</code></pre>
+        <p>In this case the loop is identified and a decriment added at
+        the end jumping to the beginning of the loop or falling through.
+        The code is made sequential.</p>
+        <p>Decriment can then have a fail condition which jumps to the
+        final halt of the program. Thus <code>++&gt;+[&lt;-&gt;]</code>
+        becomes</p>
+        <pre><code>L0 R0+ L1       +
+L1 R0+ L2       +
+L2 R1+ L3       &gt;+
+
+L3 R0- L4 L5    [&lt;-
+L4 R1- L3 L6    &gt;]
+
+L5 HALT
+L6 HALT</code></pre>
+        <p><em>note that with a minor optimisation the
+        <code>HALT</code>s can be combined</em></p>
+        <p>So the next step is to parse the tokens into an AST where all
+        decriments are control flow and all loops are converted to
+        decriments.</p>
+        <p>10-08-2023</p>
         <p><a href="../">Home</a></p>
     </div>
 </body>
