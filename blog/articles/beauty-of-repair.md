@@ -43,3 +43,10 @@ I've gotten a lot better and mending the bag I've realised that the process of h
 
 ![I love you](./I-love-you.png)
 
+10-07-2023
+
+---
+
+New template to improve readability.
+
+
