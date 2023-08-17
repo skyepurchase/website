@@ -26,10 +26,10 @@
         <p>Since this change I have implemented a basic file handler in
         <code>file_handler.c</code> and finished a tokenizer in
         <code>parser.c</code>.</p>
-        <p>The AST for brainf**k is basically just a sequence except for
+        <p>The AST for Brainf**k is basically just a sequence except for
         the loops which are simple
         <code>do ...; x--; while x != 0</code>. This constitutes the
-        only control flow in brainf**k, but the language is still Turing
+        only control flow in Brainf**k, but the language is still Turing
         complete and can be seen in comparison to <em><a
         href="https://en.wikipedia.org/wiki/Register_machine">register
         machines</a></em> (RMs).</p>
@@ -43,7 +43,7 @@
         that increment still contains a label <code>Rx+ L1</code> and so
         instructions are not necessary sequential.</em></p>
         <p>Before writing a compiler to 6502 machine code I want to
-        write a transpiler from brainf**k to RM. From brainf**k to RM
+        write a transpiler from Brainf**k to RM. From Brainf**k to RM
         this should be fairly trivial as <code>++[&gt;++&lt;]</code>
         becomes</p>
         <pre><code>L0 R0+ L1       +
@@ -75,6 +75,96 @@ L6 HALT</code></pre>
         decriments are control flow and all loops are converted to
         decriments.</p>
         <p>10-08-2023</p>
+        <hr />
+        <p>No progress on the actual code however I noticed a mistake in
+        how I interpretted Brainf**k and found an example of a
+        potentially problematic program.</p>
+        <h3 id="brainfk">Brainf**k</h3>
+        <p>Brainf**k uses 8 characters of which only 7 are practical on
+        an 8-bit machine as input is tricky. These symbols are
+        <code>+ - &lt; &gt; [ ] . ,</code> for increment, decriment,
+        left, right, begin-loop, loop-if-zero, output, and (the removed)
+        input.</p>
+        <p>Note that <code>]</code> is <em>loop-if-zero</em> and thus
+        does not decriment the counter unlike <code>Rx-</code> in RMs.
+        Further more <code>&gt;</code> and <code>&lt;</code> just
+        increment or decriment a register counter which can be a
+        different value at the start of each loop.</p>
+        <h3 id="rms">RMs</h3>
+        <p>RMs have 2 actions <code>Rx+</code> (from now on denoted
+        <code>ADD</code>) and <code>Rx-</code> (from now on denoted
+        <code>SUB</code>). It also has labels that can be jumped to
+        after each <code>ADD</code> and <code>SUB</code>. It does not
+        have explicit loops and <em>it has fixed register
+        operations</em>!</p>
+        <h3 id="the-changes">The changes</h3>
+        <p>Based on the new interpretation of Brainf**k this means the
+        program <code>++[&gt;++&lt;]</code> does not terminate as
+        <code>R0</code> remains at <code>2</code> throughout. It must
+        therefore be <code>++[&gt;++&lt;-]</code> to prevent
+        non-termination but could also be <code>++[-&gt;++&lt;]</code>
+        or even <code>++[&gt;+&lt;-&gt;+&lt;]</code> just to demonstrate
+        that it is difficult to change a loop into a simple
+        <code>SUB</code> operation.</p>
+        <p>If the program contains a <code>-]</code> this can be
+        directly converted to a <code>SUB</code> with a “zero-jump” back
+        to a previous label. A “lonely” <code>-</code> can be converted
+        to a <code>SUB</code> with a “zero-jump” to a <code>HALT</code>
+        instructions. <em>unfortunately no error codes in
+        Brainf**k</em>.</p>
+        <p>Furthermore, <code>&gt;&gt;[+&lt;]</code> is a valid program
+        which does halt. It corresponds to the following RM program:</p>
+        <pre><code>L0 R2+ L1
+L1 R1+ L2
+L2 HALT</code></pre>
+        <p>Note that the loop has to be unrolled because of the
+        requirement of fixed registers.</p>
+        <h3 id="the-solution">The solution</h3>
+        <ol type="1">
+        <li>Once the program is tokenized we want to “push”
+        <code>-</code> as late as possible so that they may “collide”
+        with a loop character, <code>[</code> or <code>]</code>.</li>
+        </ol>
+        <p>Example:</p>
+        <p><code>++[-&gt;++&lt;]</code>,
+        <code>++[&gt;&lt;-&gt;++&lt;]</code>,
+        <code>++[&gt;+&lt;-&gt;+&lt;]</code>, etc. all become
+        <code>++[&gt;++&lt;-]</code> which is the program we can easily
+        convert into RM code. <em>NOTE</em> no decriment should be
+        pushed outside of or after a loop as this can change the control
+        flow.</p>
+        <ol start="2" type="1">
+        <li>The <code>&gt;</code> and <code>&lt;</code> need to be
+        tracked inside of a loop. If they are balanced then the register
+        count at the start of the loop is the same and thus can be
+        converted to an RM loop.</li>
+        </ol>
+        <p>If they are not balanced the compiler will through an error …
+        at the moment. Figuring out how many times a loop will run is
+        not tractable (as it requires running the program to work out)
+        and setting up the operation for all possible starting register
+        counts is also not possible as there are countably infinite
+        possibilities.</p>
+        <p>Quick notes on this problem:</p>
+        <p>An RM program exists that can run any Brainf**k program by
+        simulating the register states and interpretting the “compiled”
+        Brainf**k program. By “compiled” I mean the Godel-esque number
+        (<a
+        href="https://en.wikipedia.org/wiki/G%C3%B6del_numbering">Godel
+        numbering</a>) corresponding to the the Brainf**k program. The
+        opposite is also true. Maybe I’ll post an in-depth explanation
+        about this later (the <em>theory of computation</em> is a
+        fascinating concept).</p>
+        <p>This means that Brainf**k is not “more powerful” than RMs and
+        in fact, by the <a
+        href="https://en.wikipedia.org/wiki/Church%E2%80%93Turing_thesis">Church-Turing</a>,
+        are equally powerful being Turing complete.</p>
+        <p>However, this does not mean converting from one form to the
+        other is easy (or possible? I’m not confident on that last
+        point, guess I need to prove that these weird loops definitively
+        cannot be converted … bringing in the Halting problem
+        :eyes:).</p>
+        <p>17-08-2023</p>
         <p><a href="../">Home</a></p>
     </div>
 </body>
