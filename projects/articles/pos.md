@@ -130,3 +130,5 @@ This means that Brainf\*\*k is not "more powerful" than RMs and in fact, by the 
 
 However, this does not mean converting from one form to the other is easy (or possible? I'm not confident on that last point, guess I need to prove that these weird loops definitively cannot be converted ... bringing in the Halting problem :eyes:).
 
+_ALSO_ any Brainf\*\*k program can be rewritten to do the same action without using this "hack" but the onous is now on the programmer. This is a common feature of compilers, computers are dumb they can only do so much, think about your code!
+
