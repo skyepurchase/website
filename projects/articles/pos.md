@@ -126,7 +126,7 @@ By "compiled" I mean the Godel-esque number ([Godel numbering](https://en.wikipe
 The opposite is also true.
 Maybe I'll post an in-depth explanation about this later (the _theory of computation_ is a fascinating concept).
 
-This means that Brainf\*\*k is not "more powerful" than RMs and in fact, by the [Church-Turing](https://en.wikipedia.org/wiki/Church%E2%80%93Turing_thesis), are equally powerful being Turing complete.
+This means that Brainf\*\*k is not "more powerful" than RMs and in fact, by the [Church-Turing thesis](https://en.wikipedia.org/wiki/Church%E2%80%93Turing_thesis), are equally powerful being Turing complete.
 
 However, this does not mean converting from one form to the other is easy (or possible? I'm not confident on that last point, guess I need to prove that these weird loops definitively cannot be converted ... bringing in the Halting problem :eyes:).
 
