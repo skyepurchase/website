@@ -442,18 +442,17 @@ nav .menu-btn {
 
 /*Link backs {{{ */
 .linkback a {
-    width: 150px;
-    height: 40px;
+    width: 88px;
+    height: 31px;
     display: flex;
     justify-content: center;
     align-items: center;
     border: 0px;
-    padding: 0px 22px;
     text-transform: uppercase;
-    margin: auto;
+    margin: 0.25rem;
     border-radius: 5px;
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 0.75rem;
     color: #bd93f9;
 }
 
