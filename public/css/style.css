@@ -441,6 +441,10 @@ nav .menu-btn {
 /*}}}*/   
 
 /*Link backs {{{ */
+.linkback {
+    padding: 0px 15px;
+}
+
 .linkback a {
     width: 88px;
     height: 31px;
@@ -448,15 +452,17 @@ nav .menu-btn {
     justify-content: center;
     align-items: center;
     border: 0px;
+    padding: 10px 22px;
     text-transform: uppercase;
-    margin: 0.25rem;
+    margin: auto;
     border-radius: 5px;
     font-weight: 600;
-    font-size: 0.75rem;
+    font-size: 0.9rem;
     color: #bd93f9;
 }
 
 .linkback a:hover {
+    top: -10px;
     background-color: #bd93f9;
     color: #44475a;
     box-shadow: 5px 10px 30px #bd93f988;
@@ -464,20 +470,17 @@ nav .menu-btn {
 }
 
 .linkback img {
-   min-width: 100%;
-   min-height: 100%;
+   min-width: 88px;
+   min-height: 31px;
 }
 
 /*}}}*/
 
 /* articles {{{ */
 .content {
-    display: flex;
-    position: absolute;
-    left: 50%;
-    top: 75px;
-    transform: translate(-50%,0%);
-    flex-wrap: wrap;
+    position: relative;
+    max-width: 800px;
+    margin: auto;
 }
 
 .article {
@@ -505,7 +508,25 @@ nav .menu-btn {
     padding-left: 50px;
     padding-right: 50px;
 }
+
+/*I foresee no problems with this approach*/
+.new-post {
+    max-width: 800px;
+    margin-top: 50px;
+    margin: auto;
+}
 /*}}}*/
+
+/* projects {{{ */
+.container {
+    margin-top: 120px;
+}
+
+.center {
+    text-align: center;
+    color: #8be9fd;
+}
+/* }}} */
 
 /* images {{{ */
 figure {

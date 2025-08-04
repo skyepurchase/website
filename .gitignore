@@ -1,4 +1,6 @@
-.snowpack
-build
-node_modules
+# Website files
 *.pdf
+
+# Rendered pages
+public/blog/
+public/projects/
