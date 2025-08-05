@@ -484,6 +484,28 @@ nav .menu-btn {
     min-height: 31px;
 }
 
+.isforme {
+    justify-content: left;
+    display: flex;
+    background-color: #44475a;
+    padding: 0.5rem;
+    margin: 1rem;
+    height: 8rem;
+}
+
+.isforme img {
+    height: 31px;
+    width: 88px;
+}
+
+.isforme textarea {
+    background-color: #282a36;
+    text-align: left;
+    padding: 0.25rem;
+    color: #f8f8f2;
+    width: 100%;
+}
+
 /*}}}*/
 
 /* articles {{{ */
