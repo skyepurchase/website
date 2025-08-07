@@ -259,6 +259,14 @@ nav .menu-btn {
 
 /*}}}*/
 
+/* scrf logo {{{ */
+.srcf {
+    position: absolute;
+    left: 5px;
+    bottom: 5px;
+}
+/* }}} */
+
 /* timing {{{ */
 .timing {
     position: absolute;
