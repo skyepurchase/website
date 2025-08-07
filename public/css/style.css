@@ -259,6 +259,48 @@ nav .menu-btn {
 
 /*}}}*/
 
+/* sticker {{{ */
+.sticker {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 30%;
+    left: 5%;
+    width: 10%;
+    rotate: -27.032002deg;
+    border-radius: 10%;
+}
+
+.sticker img {
+    object-fit: cover;
+    min-width: 100%;
+    min-height: 100%;
+    border-radius: 10%;
+}
+
+.sticker .peel {
+    position: absolute;
+    background: #838996;
+    width: 15%;
+    left: 85%;
+    padding-top: 15%;
+    border-top-left-radius: 50%;
+    bottom: 0;
+}
+
+.sticker .peel::after {
+    content: "";
+    position: absolute;
+    background: #282a36;
+    width: 141%;
+    height: 141%;
+    top: 30%;
+    left: 30%;
+    rotate: 45deg;
+}
+/* }}} */
+
 /* scrf logo {{{ */
 .srcf {
     position: absolute;
@@ -522,7 +564,6 @@ nav .menu-btn {
     resize: none;
     overflow: hidden;
 }
-
 /*}}}*/
 
 /* articles {{{ */
