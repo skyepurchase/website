@@ -307,14 +307,14 @@ nav .menu-btn {
 
 /* arrow {{{ */
 .arrow {
-    align-self: end;
-    width: 50%;
-    border-right: 1px solid #8be9fd;
+    width: 0px;
     height: 20%;
+    border: 2px solid #8be9fd;
+    border-radius: 4px;
     margin-bottom: 4em;
     position: absolute;
     bottom: 5px;
-    right: 70px;
+    right: 80px;
     animation: arrow-animation ease 1.5s;
 }
 
@@ -326,8 +326,8 @@ nav .menu-btn {
     border-style: solid;
     border-width: 11px 11px 0px 11px;
     border-color: #8be9fd transparent transparent transparent;
-    right: -0.7em;
-    bottom: -2px;
+    right: -0.6em;
+    bottom: -3px;
 }
 
 .scroll {
