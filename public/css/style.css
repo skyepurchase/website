@@ -511,11 +511,16 @@ nav .menu-btn {
 }
 
 .isforme textarea {
+    border: none;
+    border-radius: 4px;
+    outline: 2px dashed #282a36;
     background-color: #282a36;
     text-align: left;
     padding: 0.25rem;
     color: #f8f8f2;
     width: 100%;
+    resize: none;
+    overflow: hidden;
 }
 
 /*}}}*/
