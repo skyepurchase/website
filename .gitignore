@@ -3,5 +3,7 @@
 
 # Rendered pages
 public/blog/
-public/projects/
 public/images/
+
+# Symlinks to other git repos
+public/projects/newsletter
