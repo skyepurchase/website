@@ -1,0 +1,7 @@
+# Force https
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Ensure correct domain
+RewriteCond %{HTTP_HOST} !^skye\.purchasethe\.uk$ [NC]
+RewriteRule ^(.*)$ https://skye.purchasethe.uk%{REQUEST_URI} [L,R=301]
