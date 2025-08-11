@@ -2,7 +2,7 @@
 body {
     margin: 0px;
     padding: 0px;
-    font-family: calibri;
+    font-family: 'calibri, sans';
     color: #f8f8f2;
     background-color: #282a36;
 }
@@ -62,6 +62,14 @@ input[type="submit"] {
     font-size: 20px;
 }
 
+input[type="submit"]:hover {
+    box-shadow: 2px 10px 30px rgba(189, 147, 249, 0.5);
+}
+
+input[type="submit"]:focus {
+    border: 2px solid #bd93f9;
+}
+
 input[type="number"] {
     text-align: center;
     padding: 10px;
@@ -74,6 +82,11 @@ input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
+}
+
+input:focus, textarea:focus {
+    outline: none;
+    border: 2px solid #8be9fd;
 }
 
 label {
