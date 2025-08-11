@@ -1,9 +1,16 @@
 # Website files
 *.pdf
 
-# Rendered pages
+# Compiled pages
 public/blog/
 public/images/
+public/projects/pos/
 
 # Symlinks to other git repos
-public/projects/newsletter
+public/cgi-bin/newsletter.*
+public/cgi-bin/templates/newsletter
+public/css/newsletter.css
+public/projects/newsletter/
+
+# Python files
+**/__pycache__/
