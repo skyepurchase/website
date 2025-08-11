@@ -81,12 +81,14 @@ label {
     background-color: #44475a;
     border: 4px solid #44475a;
     border-radius: 4px;
+    height: 50%;
     width: 100%;
     border-bottom: none;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     padding: 10px;
     font-weight: bolder;
+    font-size: 15px;
 }
 /*}}}*/
 
@@ -619,11 +621,8 @@ nav .menu-btn {
 /* input-bar {{{ */
 .input-bar {
     display: grid;
-    grid-template-columns: auto auto auto;
-}
-
-.input-bar div {
-    margin: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
 }
 
 .input-bar input, .input-bar textarea {
