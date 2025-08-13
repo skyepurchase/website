@@ -7,10 +7,15 @@ public/images/
 public/projects/pos/
 
 # Symlinks to other git repos
-public/cgi-bin/newsletter.*
+# TODO: make all of this a git submodule
+public/cgi-bin/init.sql
+public/cgi-bin/newsletter.py
+public/cgi-bin/create_newsletter.py
 public/cgi-bin/templates/newsletter
 public/css/newsletter.css
 public/projects/newsletter/
 
 # Python files
 **/__pycache__/
+
+*.secrets.json
