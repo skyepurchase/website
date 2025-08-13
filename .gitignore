@@ -7,7 +7,6 @@ public/images/
 public/projects/pos/
 
 # Symlinks to other git repos
-public/cgi-bin/newsletter/
 public/css/newsletter.css
 public/projects/newsletter/
 
