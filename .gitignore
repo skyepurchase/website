@@ -7,13 +7,7 @@ public/images/
 public/projects/pos/
 
 # Symlinks to other git repos
-# TODO: make all of this a git submodule
-public/cgi-bin/init.sql
-public/cgi-bin/newsletter.py
-public/cgi-bin/create_newsletter.py
-public/cgi-bin/utils.py
-public/cgi-bin/database.py
-public/cgi-bin/templates/newsletter
+public/cgi-bin/newsletter/
 public/css/newsletter.css
 public/projects/newsletter/
 

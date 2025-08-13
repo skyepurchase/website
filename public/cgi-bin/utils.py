@@ -1,1 +1,0 @@
-/home/skye/personal/projects/newsletter/server/cgi-bin/utils.py
