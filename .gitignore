@@ -6,7 +6,7 @@ public/blog/
 public/images/
 public/projects/pos/
 
-# Symlinks to other git repos
+# Internal(!) symlinks
 public/css/newsletter.css
 public/projects/newsletter/
 
