@@ -3,8 +3,16 @@
 # Provided under WTFPL
 
 import traceback
+
 from os import environ
+from sys import stdin
+from datetime import datetime
 from urllib.parse import parse_qs
+from urllib.parse import unquote
+
+
+LOG_FILE = "/home/atp45/logs/http_lib"
+now = datetime.now()
 
 
 class HttpResponse(Exception):
@@ -13,14 +21,45 @@ class HttpResponse(Exception):
         self.text = text
 
 
-def params():
-    return {
-        x: None if len(y) == 0 else y[0] if len(y) == 1 else y
-        for x, y in parse_qs(
-            environ.get("QUERY_STRING", ""),
-            keep_blank_values=True,
-        ).items()
-    }
+def params(rest: str = "get") -> dict:
+    if rest == "get":
+        return {
+            x: None if len(y) == 0 else y[0] if len(y) == 1 else y
+            for x, y in parse_qs(
+                environ.get("QUERY_STRING", ""),
+                keep_blank_values=True,
+            ).items()
+        }
+    if rest == "post":
+        # Much more of a pain
+        raw_data = stdin.read()
+
+        # TODO: proper logging
+        open(LOG_FILE, "a").write(
+            f"[INFO: {now.isoformat()}] {raw_data}\n"
+        )
+
+        post_data = {}
+        for variable in raw_data.split("&"):
+            s = variable.split("=")
+            if len(s) != 2:
+                print(f"Status: 400")
+                print("Content-Type: text/plain")
+                print()
+                print("Invalid input.")
+                quit(1)
+
+            post_data[s[0]] = unquote(s[1].replace("+", " "))
+
+        open(LOG_FILE, "a").write(f"[INFO: {now.isoformat()}] {post_data}\n")
+
+        return post_data
+
+    print(f"Status: 500")
+    print("Content-Type: text/plain")
+    print()
+    print("Invalid REST API call.")
+    quit(1)
 
 
 def wrap(func, *args, debug=False, **kwargs):

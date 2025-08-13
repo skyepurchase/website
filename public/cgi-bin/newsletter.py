@@ -4,6 +4,6 @@
 from http_lib import params, wrap, HttpResponse
 from newsletter.cgi import render
 
-PARAMETERS = params()
+PARAMETERS = params("post")
 
 wrap(render, PARAMETERS, HttpResponse)
