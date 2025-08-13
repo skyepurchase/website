@@ -38,3 +38,6 @@ def wrap(func, *args, debug=False, **kwargs):
         if debug:
             print()
             print(traceback.format_exc())
+        else:
+            print()
+            print("Oh no! Anyway...")
