@@ -25,11 +25,8 @@ def hash_passcode(passcode: str) -> bytes:
     return salt + hash_value
 
 
-def verify(passcode: str, store: str):
-    with open(store, 'rb') as file:
-        passcode_hash: bytes = file.readline()
-
-    salt, key = passcode_hash[:16], passcode_hash[16:]
+def verify(passcode: str, hash: bytes):
+    salt, key = hash[:16], hash[16:]
 
     test_hash: bytes = hashlib.pbkdf2_hmac(
         HASH_ALGO,
