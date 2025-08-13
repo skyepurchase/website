@@ -1,0 +1,3 @@
+[submodule "public/cgi-bin/newsletter"]
+	path = public/cgi-bin/newsletter
+	url = git@github.com:skyepurchase/newsletter.git
