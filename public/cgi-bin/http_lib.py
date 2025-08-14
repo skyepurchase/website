@@ -21,6 +21,36 @@ class HttpResponse(Exception):
         self.text = text
 
 
+def format_html(html: str, replacements: dict) -> str:
+    for key, value in replacements.items():
+        html = html.replace(f"[{key}]", value)
+
+    return html
+
+
+def render_status(status: int, msg: str) -> None:
+    header = "WARN" if status > 499 else "INFO"
+    open(LOG_FILE, "a").write(f"[{header}: {now.isoformat()}] http status {status}: {msg}\n")
+
+    try:
+        html = open(f"status_template.html", "r").read()
+        values = {
+            "STATUS": str(status),
+            "MESSAGE": msg
+        }
+        print(f"Status: {status}")
+        print("Content-Type: text/html")
+        print()
+        print(format_html(html, values))
+    except Exception:
+        open(LOG_FILE, "a").write(f"[WARN: {now.isoformat()}] Error displaying HTTP status:\n{traceback.format_exc()}]\n")
+
+        print(f"Status: {status}")
+        print("Content-Type: text/plain")
+        print()
+        print(msg)
+
+
 def params(rest: str = "get") -> dict:
     if rest == "get":
         return {
@@ -43,10 +73,7 @@ def params(rest: str = "get") -> dict:
         for variable in raw_data.split("&"):
             s = variable.split("=")
             if len(s) != 2:
-                print(f"Status: 400")
-                print("Content-Type: text/plain")
-                print()
-                print("Invalid input.")
+                render_status(400, "Invalid input")
                 quit(1)
 
             post_data[s[0]] = unquote(s[1].replace("+", " "))
@@ -55,10 +82,7 @@ def params(rest: str = "get") -> dict:
 
         return post_data
 
-    print(f"Status: 500")
-    print("Content-Type: text/plain")
-    print()
-    print("Invalid REST API call.")
+    render_status(405, "Invalid REST API call")
     quit(1)
 
 
@@ -67,16 +91,7 @@ def wrap(func, *args, debug=False, **kwargs):
         try:
             func(*args, **kwargs)
         except HttpResponse as e:
-            print(f"Status: {e.status}")
-            print("Content-Type: text/plain")
-            print()
-            print(e.text)
+            render_status(e.status, e.text)
     except Exception:
-        print("Status: 500 Internal Server Error")
-        print("Content-Type: text/plain")
-        if debug:
-            print()
-            print(traceback.format_exc())
-        else:
-            print()
-            print("Oh no! Anyway...")
+        text = traceback.format_exc() if debug else "Oh no! Anyway ..."
+        render_status(500, text)
