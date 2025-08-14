@@ -664,19 +664,13 @@ img {}
 
 /*}}}*/
 
-/* footer {{{ */
-footer {
-    width: 100%;
+/* HTTP status {{{ */
+.status {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
-    padding: 0px 5%;
-    border-top: 1px solid rgba(189, 147, 249, 0.2);
+    color: #8be9fd;
+    font-size: 20px;
+    font-weight: bolder;
 }
-
-footer a,
-footer p {
-    color: #ff5555;
-}
-
-/*}}}*/
+/* }}} */
