@@ -42,13 +42,11 @@ def render_status(status: int, msg: str) -> None:
         print("Content-Type: text/html")
         print()
         print(format_html(html, values))
-    except Exception:
+    except Exception as e:
+        # Logging for debugging later
         open(LOG_FILE, "a").write(f"[WARN: {now.isoformat()}] Error displaying HTTP status:\n{traceback.format_exc()}]\n")
-
-        print(f"Status: {status}")
-        print("Content-Type: text/plain")
-        print()
-        print(msg)
+        # Let wrap deal with it
+        raise e
 
 
 def params(rest: str = "get") -> dict:
@@ -84,14 +82,3 @@ def params(rest: str = "get") -> dict:
 
     render_status(405, "Invalid REST API call")
     quit(1)
-
-
-def wrap(func, *args, debug=False, **kwargs):
-    try:
-        try:
-            func(*args, **kwargs)
-        except HttpResponse as e:
-            render_status(e.status, e.text)
-    except Exception:
-        text = traceback.format_exc() if debug else "Oh no! Anyway ..."
-        render_status(500, text)
