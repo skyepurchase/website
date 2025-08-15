@@ -8,7 +8,7 @@ def run():
     from http_lib import params, HttpResponse
     from newsletter.cgi import answer
 
-    PARAMETERS = params("post")
+    PARAMETERS = params("POST")
 
     answer(PARAMETERS, HttpResponse)
 
