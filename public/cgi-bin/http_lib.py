@@ -90,14 +90,15 @@ def params(method: str = "GET") -> dict:
 
             open(LOG_FILE, "a").write(f"[INFO: {NOW.isoformat()}] {raw_data}\n")
 
-            post_data = {}
+            get_data = {}
             for content in raw_data.split("&"):
                 s = content.split("=")
                 if len(s) != 2:
                     render_status(400, "Invalid input")
                     quit(1)
 
-                post_data[s[0]] = unquote(s[1].replace("+", " "))
+                get_data[s[0]] = unquote(s[1].replace("+", " "))
+            open(LOG_FILE, "a").write(f"[INFO: {NOW.isoformat()}] {get_data}\n")
         else:
             # Let me know something big is going on
             open(LOG_FILE, "a").write(f"[INFO: {NOW.isoformat()}] Parsing multipart data...\n")
