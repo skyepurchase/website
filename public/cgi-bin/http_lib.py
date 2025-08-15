@@ -90,20 +90,19 @@ def params(method: str = "GET") -> dict:
 
             open(LOG_FILE, "a").write(f"[INFO: {NOW.isoformat()}] {raw_data}\n")
 
-            get_data = {}
+            param_data = {}
             for content in raw_data.split("&"):
                 s = content.split("=")
                 if len(s) != 2:
                     render_status(400, "Invalid input")
                     quit(1)
 
-                get_data[s[0]] = unquote(s[1].replace("+", " "))
-            open(LOG_FILE, "a").write(f"[INFO: {NOW.isoformat()}] {get_data}\n")
+                param_data[s[0]] = unquote(s[1].replace("+", " "))
         else:
             # Let me know something big is going on
             open(LOG_FILE, "a").write(f"[INFO: {NOW.isoformat()}] Parsing multipart data...\n")
 
-            post_data = {}
+            param_data = {}
 
             def on_field(field):
                 """
@@ -111,7 +110,7 @@ def params(method: str = "GET") -> dict:
                 """
                 key = field.field_name.decode('utf-8')
                 value = field.value.decode('utf-8')
-                post_data[key] = value
+                param_data[key] = value
 
                 open(LOG_FILE, "a").write(
                     f"[INFO: {NOW.isoformat()}] Parsed field '{key}' = '{value}'\n"
@@ -145,7 +144,7 @@ def params(method: str = "GET") -> dict:
                     )
                     return
 
-                post_data[key] = {
+                param_data[key] = {
                     'filename': new_filename,
                     'path': path
                 }
@@ -179,7 +178,7 @@ def params(method: str = "GET") -> dict:
                 render_status(400, f"Multipart parsing error")
                 quit(1)
 
-        open(LOG_FILE, "a").write(f"[INFO: {NOW.isoformat()}] {post_data}\n")
-        return post_data
+        open(LOG_FILE, "a").write(f"[INFO: {NOW.isoformat()}] {param_data}\n")
+        return param_data
 
     raise HttpResponse(405, "Invalid REST API call")
