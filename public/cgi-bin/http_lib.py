@@ -4,7 +4,7 @@ import traceback
 from os import environ
 from sys import stdin
 from datetime import datetime
-from PIL import Image
+from PIL import Image, UnidentifiedImageError
 
 from urllib.parse import parse_qs
 from urllib.parse import unquote
@@ -125,9 +125,6 @@ def params(method: str = "GET") -> dict:
                 filename = file.file_name.decode('utf-8')
                 file_obj: BytesIO = file.file_object
 
-                # Don't parse if there is not data
-                if len(file_obj.read()) == 0: return
-
                 file_parts = filename.split('.')
                 # At this resolution all file uploads should be unique
                 new_filename = f"{''.join(file_parts[:-1])}_{NOW.strftime('%Y%m%d%H%M%S')}.{file_parts[-1]}"
@@ -138,8 +135,14 @@ def params(method: str = "GET") -> dict:
                 # Decode and save as an image
                 # multipart-python does not support mimetypes yet: https://github.com/Kludex/python-multipart/issues/207
                 # TODO: don't assume this is an image!!
-                image = Image.open(file_obj)
-                image.save(path)
+                try:
+                    image = Image.open(file_obj)
+                    image.save(path)
+                except UnidentifiedImageError:
+                    open(LOG_FILE, "a").write(
+                        f"[WARN: {NOW.isoformat()}] Image decoding error. Likely lack of data\n"
+                    )
+                    return
 
                 post_data[key] = {
                     'filename': new_filename,
@@ -150,7 +153,6 @@ def params(method: str = "GET") -> dict:
                 open(LOG_FILE, "a").write(
                     f"[INFO: {NOW.isoformat()}] Parsed file '{key}', filename='{new_filename}', path={path}\n"
                 )
-
             try:
                 from io import BytesIO
 
@@ -171,7 +173,7 @@ def params(method: str = "GET") -> dict:
                 )
             except Exception as e:
                 open(LOG_FILE, "a").write(
-                    f"[ERROR: {NOW.isoformat()}] Multipart parsing failed: {e}\n"
+                    f"[ERROR: {NOW.isoformat()}] Multipart parsing failed: {traceback.format_exc()}\n"
                 )
                 render_status(400, f"Multipart parsing error")
                 quit(1)
