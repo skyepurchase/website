@@ -125,6 +125,9 @@ def params(method: str = "GET") -> dict:
                 filename = file.file_name.decode('utf-8')
                 file_obj: BytesIO = file.file_object
 
+                # Don't parse if there is not data
+                if len(file_obj.read()) == 0: return
+
                 file_parts = filename.split('.')
                 # At this resolution all file uploads should be unique
                 new_filename = f"{''.join(file_parts[:-1])}_{NOW.strftime('%Y%m%d%H%M%S')}.{file_parts[-1]}"
