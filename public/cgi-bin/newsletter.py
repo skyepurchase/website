@@ -1,9 +1,15 @@
 #!/usr/bin/python3
 # Wrapper for the newsletter main method
 
-from http_lib import params, wrap, HttpResponse
-from newsletter.cgi import render
+from wrap import wrap # Safe import
 
-PARAMETERS = params("post")
+def run():
+    # All unsafe code that will now be caught
+    from http_lib import params, HttpResponse
+    from newsletter.cgi import render
 
-wrap(render, PARAMETERS, HttpResponse)
+    PARAMETERS = params("post")
+
+    render(PARAMETERS, HttpResponse)
+
+wrap(run)
