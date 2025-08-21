@@ -137,6 +137,13 @@ def params(method: str = "GET") -> dict:
                 # TODO: don't assume this is an image!!
                 try:
                     image = Image.open(file_obj)
+                    # Scale images for space
+                    width, height = image.size
+                    scale = 500 / width
+                    image.resize(
+                        (500,height*scale),
+                        Image.Resampling.LANCZOS
+                    )
                     image.save(path)
                 except UnidentifiedImageError:
                     open(LOG_FILE, "a").write(
