@@ -1,5 +1,4 @@
-import os
-import traceback
+import os, traceback, logging
 
 from os import environ
 from sys import stdin
@@ -11,9 +10,17 @@ from urllib.parse import unquote
 import python_multipart
 
 
-LOG_FILE = "/home/atp45/logs/http_lib"
 DOWNLOAD_FOLDER = "/home/atp45/downloads"
 NOW = datetime.now()
+
+formatter = logging.Formatter(
+    '[%(asctime)s %(levelname)s] %(message)s',
+    datefmt="%Y-%m-%d %H:%M:%S"
+)
+logger = logging.getLogger(__name__)
+handler = logging.FileHandler("/home/atp45/logs/http_lib")
+handler.setFormatter(formatter)
+logger.addHandler(handler)
 
 
 class HttpResponse(Exception):
@@ -30,8 +37,10 @@ def format_html(html: str, replacements: dict) -> str:
 
 
 def render_status(status: int, msg: str) -> None:
-    header = "WARN" if status > 499 else "INFO"
-    open(LOG_FILE, "a").write(f"[{header}: {NOW.isoformat()}] HTTP status {status}: {msg}\n")
+    if status > 499:
+        logger.warning("HTTP status %s: %s", status, msg)
+    else:
+        logger.info("HTTP status %s: %s", status, msg)
 
     try:
         html = open(f"status_template.html", "r").read()
@@ -45,7 +54,7 @@ def render_status(status: int, msg: str) -> None:
         print(format_html(html, values))
     except Exception as e:
         # Logging for debugging later
-        open(LOG_FILE, "a").write(f"[WARN: {NOW.isoformat()}] Error displaying HTTP status:\n{traceback.format_exc()}]\n")
+        logger.debug("Error displaying HTTP status:\n%s", traceback.format_exc())
         # Let wrap deal with it
         raise e
 
@@ -76,9 +85,8 @@ def params(method: str = "GET") -> dict:
     if method == "POST":
         # The pain begins
         read_in = stdin.buffer.read()
-
-        open(LOG_FILE, "a").write(
-            f"[INFO: {NOW.isoformat()}] Received {len(read_in)} bytes of data\n"
+        logger.info(
+            "Received %s bytes of data", str(len(read_in))
         )
 
         # Get the content type
@@ -87,8 +95,7 @@ def params(method: str = "GET") -> dict:
         # And parse accordingly
         if not content_type.startswith('multipart/'):
             raw_data = read_in.decode('utf-8')
-
-            open(LOG_FILE, "a").write(f"[INFO: {NOW.isoformat()}] {raw_data}\n")
+            logger.info(raw_data)
 
             param_data = {}
             for content in raw_data.split("&"):
@@ -100,8 +107,7 @@ def params(method: str = "GET") -> dict:
                 param_data[s[0]] = unquote(s[1].replace("+", " "))
         else:
             # Let me know something big is going on
-            open(LOG_FILE, "a").write(f"[INFO: {NOW.isoformat()}] Parsing multipart data...\n")
-
+            logger.info("Parsing multipart data")
             param_data = {}
 
             def on_field(field):
@@ -112,8 +118,8 @@ def params(method: str = "GET") -> dict:
                 value = field.value.decode('utf-8')
                 param_data[key] = value
 
-                open(LOG_FILE, "a").write(
-                    f"[INFO: {NOW.isoformat()}] Parsed field '{key}' = '{value}'\n"
+                logger.info(
+                    "Parsed field '%s'='%s'", key, value
                 )
 
             def on_file(file):
@@ -146,9 +152,8 @@ def params(method: str = "GET") -> dict:
                     )
                     image.save(path)
                 except UnidentifiedImageError:
-                    open(LOG_FILE, "a").write(
-                        f"[WARN: {NOW.isoformat()}] Image decoding error. Likely lack of data\n"
-                    )
+                    logger.warning("Image decoding error, skipping decoding")
+                    logger.debug("Image decoding traceback:\n%s", traceback.format_exc())
                     return
 
                 param_data[key] = {
@@ -157,8 +162,9 @@ def params(method: str = "GET") -> dict:
                 }
 
                 file_obj.seek(0)
-                open(LOG_FILE, "a").write(
-                    f"[INFO: {NOW.isoformat()}] Parsed file '{key}', filename='{new_filename}', path={path}\n"
+                logger.info(
+                    "Parsed file '%s', filename='%s', path='%s'",
+                    key, new_filename, path
                 )
             try:
                 from io import BytesIO
@@ -178,14 +184,12 @@ def params(method: str = "GET") -> dict:
                     on_field,
                     on_file
                 )
-            except Exception as e:
-                open(LOG_FILE, "a").write(
-                    f"[ERROR: {NOW.isoformat()}] Multipart parsing failed: {traceback.format_exc()}\n"
-                )
+            except Exception:
+                logger.debug("Multipart parsing failed:\n%s", traceback.format_exc())
                 render_status(400, f"Multipart parsing error")
                 quit(1)
 
-        open(LOG_FILE, "a").write(f"[INFO: {NOW.isoformat()}] {param_data}\n")
+        logger.info(param_data)
         return param_data
 
     raise HttpResponse(405, "Invalid REST API call")
