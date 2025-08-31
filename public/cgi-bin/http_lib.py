@@ -4,6 +4,10 @@ from os import environ
 from sys import stdin
 from datetime import datetime
 from PIL import Image, UnidentifiedImageError
+if not hasattr(Image, 'Resampling'):
+    # PIL changes after 9.0
+    # The server may different from local development
+    Image.Resampling = Image
 
 from urllib.parse import parse_qs
 from urllib.parse import unquote
