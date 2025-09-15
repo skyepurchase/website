@@ -25,6 +25,7 @@ logger = logging.getLogger(__name__)
 handler = logging.FileHandler("/home/atp45/logs/http_lib")
 handler.setFormatter(formatter)
 logger.addHandler(handler)
+logger.setLevel(logging.DEBUG)
 
 
 class HttpResponse(Exception):
