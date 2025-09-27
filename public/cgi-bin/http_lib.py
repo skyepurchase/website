@@ -152,7 +152,7 @@ def params(method: str = "GET") -> dict:
                     width, height = image.size
                     scale = 500 / width
                     image.resize(
-                        (500,height*scale),
+                        (500,int(height*scale)),
                         Image.Resampling.LANCZOS
                     )
                     image.save(path)
