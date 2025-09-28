@@ -136,6 +136,10 @@ def params(method: str = "GET") -> dict:
                 filename = file.file_name.decode('utf-8')
                 file_obj: BytesIO = file.file_object
 
+                if file_obj.getbuffer().nbytes == 0:
+                    logger.info("No file uploaded. Skipping and continuing with decoding.")
+                    return
+
                 file_parts = filename.split('.')
                 # At this resolution all file uploads should be unique
                 new_filename = f"{''.join(file_parts[:-1])}_{NOW.strftime('%Y%m%d%H%M%S')}.{file_parts[-1]}"
@@ -171,6 +175,7 @@ def params(method: str = "GET") -> dict:
                     "Parsed file '%s', filename='%s', path='%s'",
                     key, new_filename, path
                 )
+
             try:
                 from io import BytesIO
 
