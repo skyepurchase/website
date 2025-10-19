@@ -1,3 +1,4 @@
+from io import BufferedRandom
 import os, traceback, logging
 
 from os import environ
@@ -134,9 +135,13 @@ def params(method: str = "GET") -> dict:
                 # Get the filename and byte data
                 key = file.field_name.decode('utf-8')
                 filename = file.file_name.decode('utf-8')
-                file_obj: BytesIO = file.file_object
+                file_obj: BytesIO | BufferedRandom = file.file_object
+                logger.debug(f"File object type: {type(file_obj)}")
 
-                if file_obj.getbuffer().nbytes == 0:
+                if (
+                    isinstance(file_obj, BytesIO) and file_obj.getbuffer().nbytes == 0 or
+                    isinstance(file_obj, BufferedRandom) and file_obj.tell() == 0
+                ):
                     logger.info("No file uploaded. Skipping and continuing with decoding.")
                     return
 
