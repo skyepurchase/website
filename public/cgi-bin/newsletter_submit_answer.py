@@ -19,6 +19,6 @@ def run():
 
         answer(parameters, HttpResponse)
     else:
-        raise HttpResponse(503, msg)
+        raise HttpResponse(400, msg)
 
 wrap(run)
