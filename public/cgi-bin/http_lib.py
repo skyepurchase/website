@@ -162,6 +162,10 @@ def verify_token(jwt: str) -> Tuple[bool, str, dict]:
             logger.debug(f"Failed to decode payload {payload}: {traceback.format_exc()}")
             return False, "Unknown error likely with base64 decoding", {}
 
+        if "exp" in data:
+            if datetime.now() > datetime.fromtimestamp(data["exp"]):
+                return False, "Timestamp expired", {}
+
         return True, "success", data
 
     return False, "Signatures do not match", {}
