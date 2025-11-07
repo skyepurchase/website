@@ -1,9 +1,10 @@
 from io import BufferedRandom
-import os, traceback, logging
+import os, traceback, logging, json, base64, hashlib, hmac
 
 from os import environ
 from sys import stdin
 from datetime import datetime
+
 from PIL import Image, UnidentifiedImageError
 if not hasattr(Image, 'Resampling'):
     # PIL changes after 9.0
@@ -14,9 +15,17 @@ from urllib.parse import parse_qs
 from urllib.parse import unquote
 import python_multipart
 
+from typing import Tuple
+
 
 DOWNLOAD_FOLDER = "/home/atp45/downloads"
 NOW = datetime.now()
+ITERATIONS = 100000
+HASH_ALGO = 'sha256'
+
+with open("/home/atp45/.secrets.json", "r") as f:
+    SECRETS = json.loads(f.read())
+
 
 formatter = logging.Formatter(
     '[%(asctime)s %(levelname)s] %(message)s',
@@ -45,8 +54,6 @@ def format_html(html: str, replacements: dict) -> str:
 def render_status(status: int, msg: str) -> None:
     if status > 499:
         logger.warning("HTTP status %s: %s", status, msg)
-    else:
-        logger.info("HTTP status %s: %s", status, msg)
 
     try:
         html = open(f"status_template.html", "r").read()
@@ -63,6 +70,124 @@ def render_status(status: int, msg: str) -> None:
         logger.debug("Error displaying HTTP status:\n%s", traceback.format_exc())
         # Let wrap deal with it
         raise e
+
+
+def generate_token(data: dict) -> str:
+    """
+    Generate JSON Web Token with the given payload
+
+    Parameters
+    ----------
+    payload : dict
+        The payload as a JSON object
+
+    Returns
+    -------
+    jwt : str
+        The JSON web token as a string
+    """
+    header: bytes = base64.b64encode(
+        json.dumps({
+            "alg": "HS256",
+            "typ": "JWT"
+        }).encode('ascii')
+    )
+    payload: bytes = base64.b64encode(
+        json.dumps(data).encode('ascii')
+    )
+
+    secret = SECRETS['JWT_SEED'].encode('utf-8')
+    signature: str = hmac.new(
+        secret,
+        header + '.'.encode('ascii') + payload,
+        hashlib.sha256
+    ).hexdigest()
+
+    jwt = header.decode('ascii') + '.' + payload.decode('ascii') + '.' + signature
+
+    return jwt
+
+
+def verify_token(jwt: str) -> Tuple[bool, str, dict]:
+    """
+    Verify the JSON Web Token returning the error message or JSON payload data
+
+    Parameters
+    ----------
+    jwt : str
+        The JSON Web Token as a string
+
+    Returns
+    -------
+    success : bool
+        If the token was successfully verified
+    message : str
+        The error message
+    data    : dict
+        The token payload
+    """
+    secret = SECRETS["JWT_SEED"].encode('utf-8')
+    header, payload, signature = jwt.split('.')
+
+    # Unsafe header decode to verify correct data
+    try:
+        header_d = json.loads(base64.b64decode(header))
+    except json.JSONDecodeError:
+        logger.debug(f"Failed to decode header from bytes {base64.b64decode(header).decode('ascii')}")
+        return False, "Failed to decode header", {}
+    except Exception:
+        logger.debug(f"Failed to decode header {header}: {traceback.format_exc()}")
+        return False, "Unknown error likely with base64 decoding", {}
+
+    if (
+        header_d.get("typ") != "JWT" or
+        header_d.get("alg") != "HS256"
+    ):
+        logger.debug(f"Header validation failed, received {header_d}")
+        return False, "Invalid header", {}
+
+    test_sig = hmac.new(
+        secret,
+        (header + '.' + payload).encode('ascii'),
+        hashlib.sha256
+    ).hexdigest()
+
+    if test_sig == signature:
+        try:
+            data = json.loads(base64.b64decode(payload))
+        except json.JSONDecodeError:
+            logger.debug(f"Failed to decode payload from bytes {base64.b64decode(payload).decode('ascii')}")
+            return False, "Failed to decode payload", {}
+        except Exception:
+            logger.debug(f"Failed to decode payload {payload}: {traceback.format_exc()}")
+            return False, "Unknown error likely with base64 decoding", {}
+
+        return True, "success", data
+
+    return False, "Signatures do not match", {}
+
+
+def get_cookies() -> dict:
+    """
+    Retrieve and process the passed cookies
+
+    Returns
+    -------
+    cookies : dict
+        A dictionary of cookies
+    """
+    cookie_string = os.environ.get('HTTP_COOKIE')
+
+    if cookie_string is None:
+        return {}
+
+    cookies = {}
+    for cookie in cookie_string.split(';'):
+        # Some cookie values with contain '=' T.T
+        key, *value = cookie.split('=')
+        cookies[key] = "=".join(value)
+
+    return cookies
 
 
 def params(method: str = "GET") -> dict:
@@ -124,10 +249,6 @@ def params(method: str = "GET") -> dict:
                 value = field.value.decode('utf-8')
                 param_data[key] = value
 
-                logger.info(
-                    "Parsed field '%s'='%s'", key, value
-                )
-
             def on_file(file):
                 """
                 What to do when a file is parsed.
@@ -176,10 +297,6 @@ def params(method: str = "GET") -> dict:
                 }
 
                 file_obj.seek(0)
-                logger.info(
-                    "Parsed file '%s', filename='%s', path='%s'",
-                    key, new_filename, path
-                )
 
             try:
                 from io import BytesIO

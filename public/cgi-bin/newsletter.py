@@ -5,11 +5,18 @@ from wrap import wrap # Safe import
 
 def run():
     # All unsafe code that will now be caught
-    from http_lib import params, HttpResponse
+    from http_lib import get_cookies, verify_token, HttpResponse
     from newsletter.cgi import render
 
-    PARAMETERS = params("POST")
+    cookies = get_cookies()
+    if "newsletter_token" not in cookies:
+        raise HttpResponse(401, "No authentication cookie found. Please unlock the newsletter again.")
 
-    render(PARAMETERS, HttpResponse)
+    success, msg, data = verify_token(cookies['newsletter_token'])
+
+    if success:
+        render(data, HttpResponse)
+    else:
+        raise HttpResponse(503, msg)
 
 wrap(run)
