@@ -38,7 +38,8 @@ font {
     font-weight: 700;
 }
 
-input, textarea {
+input,
+textarea {
     border: 2px solid #44475a;
     background-color: #282a36;
     border-top: none;
@@ -84,7 +85,8 @@ input::-webkit-inner-spin-button {
     margin: 0;
 }
 
-input:focus, textarea:focus {
+input:focus,
+textarea:focus {
     outline: none;
     border: 2px solid #8be9fd;
 }
@@ -103,6 +105,7 @@ label {
     font-weight: bolder;
     font-size: 15px;
 }
+
 /*}}}*/
 
 /* navigation {{{*/
@@ -351,6 +354,7 @@ nav .menu-btn {
     left: 30%;
     rotate: 45deg;
 }
+
 /* }}} */
 
 /* scrf logo {{{ */
@@ -359,6 +363,7 @@ nav .menu-btn {
     left: 5px;
     bottom: 5px;
 }
+
 /* }}} */
 
 /* arrow {{{ */
@@ -578,6 +583,7 @@ nav .menu-btn {
     resize: none;
     overflow: hidden;
 }
+
 /*}}}*/
 
 /* articles {{{ */
@@ -611,7 +617,19 @@ nav .menu-btn {
     max-width: 800px;
     margin: auto;
     margin-top: 50px;
-    padding-bottom: 10px;
+    padding: 10px 50px;
+    padding-top: 0;
+}
+
+.new-post code {
+    font-size: 1rem;
+    color: #50fa7b;
+    background-color: #44475A;
+    padding: 0 5px;
+}
+
+.new-post ul {
+    list-style-type: disc;
 }
 
 /*}}}*/
@@ -629,6 +647,7 @@ nav .menu-btn {
     text-align: center;
     color: #8be9fd;
 }
+
 /* }}} */
 
 /* input-bar {{{ */
@@ -638,12 +657,14 @@ nav .menu-btn {
     gap: 10px;
 }
 
-.input-bar input, .input-bar textarea {
+.input-bar input,
+.input-bar textarea {
     height: 40px;
     font-size: 20px;
     margin-bottom: 1rem;
     font-weight: bold;
 }
+
 /* }}} */
 
 /* images {{{ */
@@ -673,4 +694,5 @@ img {}
     font-size: 20px;
     font-weight: bolder;
 }
+
 /* }}} */
