@@ -14,7 +14,7 @@ def get_source(
     try:
         return requests.get(url)
     except RequestException:
-        raise HttpResponse(503, "Unable to retrieve data")
+        raise HttpResponse(424, "Unable to retrieve data")
 
 
 def get_data(
@@ -24,21 +24,21 @@ def get_data(
     response = get_source(url, HttpResponse)
 
     if isinstance(response, RequestException):
-        raise HttpResponse(503, "Invalid response from weather server")
+        raise HttpResponse(424, "Invalid response from weather server")
     else:
         tree = ElementTree.fromstring(response.content)
 
         channel: Union[ElementTree.Element, None] = tree.find('channel')
         if channel is None:
-            raise HttpResponse(503, "Cannot find 'channel' in weather server response")
+            raise HttpResponse(424, "Cannot find 'channel' in weather server response")
 
         item: Union[ElementTree.Element, None] = channel.find('item')
         if item is None:
-            raise HttpResponse(503, "Cannot find 'item' in weather server response")
+            raise HttpResponse(424, "Cannot find 'item' in weather server response")
 
         data: Union[ElementTree.Element, None] = item.find('description')
         if data is None or data.text is None:
-            raise HttpResponse(503, "Not weather data returned")
+            raise HttpResponse(424, "Not weather data returned")
 
         table = ElementTree.XML(data.text)
         rows = iter(table)
