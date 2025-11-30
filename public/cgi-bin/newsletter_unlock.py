@@ -28,7 +28,7 @@ def run():
         "exp": expiration.timestamp(),
         "newsletter_id": n_id,
         "newsletter_title": n_title,
-        "newsletter_folder": n_folder,
+        "newsletter_folder": n_folder
     }
     jwt = generate_token(payload)
 

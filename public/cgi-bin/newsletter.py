@@ -5,7 +5,12 @@ from wrap import wrap # Safe import
 
 def run():
     # All unsafe code that will now be caught
-    from http_lib import get_cookies, verify_token, HttpResponse
+    from http_lib import (
+        get_cookies,
+        verify_token,
+        params,
+        HttpResponse
+    )
     from newsletter.cgi import render
 
     cookies = get_cookies()
@@ -14,8 +19,19 @@ def run():
 
     success, msg, data = verify_token(cookies['newsletter_token'])
 
+    issue = params("GET").get("issue")
+    if issue:
+        try:
+            issue = int(issue)
+        except ValueError:
+            raise HttpResponse(400, "Issue must be an integer")
+
     if success:
-        render(data, HttpResponse)
+        render(
+            data,
+            issue,
+            HttpResponse
+        )
     else:
         raise HttpResponse(400, msg)
 
