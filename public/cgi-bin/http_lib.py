@@ -8,7 +8,7 @@ from datetime import datetime
 from PIL import Image, UnidentifiedImageError
 if not hasattr(Image, 'Resampling'):
     # PIL changes after 9.0
-    # The server may different from local development
+    # The server may be different from local development
     Image.Resampling = Image
 
 from urllib.parse import parse_qs
@@ -220,9 +220,6 @@ def params(method: str = "GET") -> dict:
     if method == "POST":
         # The pain begins
         read_in = stdin.buffer.read()
-        logger.info(
-            "Received %s bytes of data", str(len(read_in))
-        )
 
         # Get the content type
         content_type = environ.get('CONTENT_TYPE', '')
@@ -230,7 +227,6 @@ def params(method: str = "GET") -> dict:
         # And parse accordingly
         if not content_type.startswith('multipart/'):
             raw_data = read_in.decode('utf-8')
-            logger.info(raw_data)
 
             param_data = {}
             for content in raw_data.split("&"):
@@ -241,8 +237,6 @@ def params(method: str = "GET") -> dict:
 
                 param_data[s[0]] = unquote(s[1].replace("+", " "))
         else:
-            # Let me know something big is going on
-            logger.info("Parsing multipart data")
             param_data = {}
 
             def on_field(field):
@@ -260,8 +254,7 @@ def params(method: str = "GET") -> dict:
                 # Get the filename and byte data
                 key = file.field_name.decode('utf-8')
                 filename = file.file_name.decode('utf-8')
-                file_obj: BytesIO | BufferedRandom = file.file_object
-                logger.debug(f"File object type: {type(file_obj)}")
+                file_obj = file.file_object
 
                 if (
                     isinstance(file_obj, BytesIO) and file_obj.getbuffer().nbytes == 0 or
