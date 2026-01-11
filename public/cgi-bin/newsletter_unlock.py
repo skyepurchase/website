@@ -7,7 +7,7 @@ def run():
     # All unsafe code that will now be caught
     from datetime import datetime, timedelta, timezone
     from http_lib import params, generate_token, HttpResponse
-    from newsletter.cgi import authenticate
+    from newsletter.utils.html import authenticate
 
     PARAMETERS = params("POST")
 
