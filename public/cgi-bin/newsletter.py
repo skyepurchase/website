@@ -8,7 +8,7 @@ def run():
     # All unsafe code that will now be caught
     from http_lib import get_cookies, verify_token, params, HttpResponse
     from newsletter.cgi import render
-    from newsletter.utils.type_hints import NewsletterToken
+    from newsletter.utils.type_hints import NewsletterToken, NewsletterException
 
     cookies = get_cookies()
     if "newsletter_token" not in cookies:
@@ -32,7 +32,10 @@ def run():
     )
 
     if success:
-        render(data, issue, HttpResponse)
+        try:
+            render(data, issue)
+        except NewsletterException as res:
+            raise HttpResponse(res.status, res.msg)
     else:
         raise HttpResponse(400, msg)
 
