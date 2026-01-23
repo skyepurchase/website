@@ -27,4 +27,3 @@ I hope to have more regular blogs detailing this journey as it unfolds either as
 ---
 
 New template to improve readability.
-

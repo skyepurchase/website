@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 # Wrapper for the newsletter answer method
 
-from wrap import wrap # Safe import
+from wrap import wrap  # Safe import
+
 
 def run():
     # All unsafe code that will now be caught
@@ -10,9 +11,11 @@ def run():
 
     cookies = get_cookies()
     if "newsletter_token" not in cookies:
-        raise HttpResponse(401, "No authentication cookie found. Please unlock the newsletter again.")
+        raise HttpResponse(
+            401, "No authentication cookie found. Please unlock the newsletter again."
+        )
 
-    success, msg, _ = verify_token(cookies['newsletter_token'])
+    success, msg, _ = verify_token(cookies["newsletter_token"])
 
     if success:
         parameters = params("POST")
@@ -20,5 +23,6 @@ def run():
         answer(parameters, HttpResponse)
     else:
         raise HttpResponse(400, msg)
+
 
 wrap(run)
