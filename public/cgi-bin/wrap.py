@@ -1,5 +1,5 @@
 # Courtesy of ellie.clifford.lol provided WTFPL
-import traceback # A safe import, at least it should be
+import traceback  # A safe import, at least it should be
 
 
 def wrap(func, *args, **kwargs):

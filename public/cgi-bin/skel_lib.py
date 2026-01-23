@@ -7,20 +7,14 @@ from requests.models import Response
 from typing import Dict, Tuple, Union
 
 
-def get_source(
-    url: str,
-    HttpResponse
-) -> Union[Response, RequestException]:
+def get_source(url: str, HttpResponse) -> Union[Response, RequestException]:
     try:
         return requests.get(url)
     except RequestException:
         raise HttpResponse(424, "Unable to retrieve data")
 
 
-def get_data(
-    url: str,
-    HttpResponse
-) -> Union[Dict, None]:
+def get_data(url: str, HttpResponse) -> Union[Dict, None]:
     response = get_source(url, HttpResponse)
 
     if isinstance(response, RequestException):
@@ -28,15 +22,15 @@ def get_data(
     else:
         tree = ElementTree.fromstring(response.content)
 
-        channel: Union[ElementTree.Element, None] = tree.find('channel')
+        channel: Union[ElementTree.Element, None] = tree.find("channel")
         if channel is None:
             raise HttpResponse(424, "Cannot find 'channel' in weather server response")
 
-        item: Union[ElementTree.Element, None] = channel.find('item')
+        item: Union[ElementTree.Element, None] = channel.find("item")
         if item is None:
             raise HttpResponse(424, "Cannot find 'item' in weather server response")
 
-        data: Union[ElementTree.Element, None] = item.find('description')
+        data: Union[ElementTree.Element, None] = item.find("description")
         if data is None or data.text is None:
             raise HttpResponse(424, "Not weather data returned")
 
@@ -73,16 +67,10 @@ def convert(temperature: float, params: dict):
 
 
 def run(params, HttpResponse):
-    table = get_data(
-        "https://www.cl.cam.ac.uk/weather/rss.xml",
-        HttpResponse
-    )
+    table = get_data("https://www.cl.cam.ac.uk/weather/rss.xml", HttpResponse)
     minT, midT, maxT = get_input(params)
 
-    value = convert(
-        float(table['Temp'][:-2]),
-        params
-    ) if table is not None else 0
+    value = convert(float(table["Temp"][:-2]), params) if table is not None else 0
 
     # HTML response
     with open("templates/skel/template.html") as template:
@@ -92,7 +80,7 @@ def run(params, HttpResponse):
         "termperature": str(round(value, 2) * 1000),
         "minT": str(minT),
         "midT": str(midT),
-        "maxT": str(maxT)
+        "maxT": str(maxT),
     }
 
     print("Content-Type: text/html")

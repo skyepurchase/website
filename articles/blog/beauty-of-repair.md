@@ -48,5 +48,3 @@ I've gotten a lot better and mending the bag I've realised that the process of h
 ---
 
 New template to improve readability.
-
-
