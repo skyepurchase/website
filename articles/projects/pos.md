@@ -4,7 +4,7 @@ date: 17-08-2023
 
 ---
 
-# Pseudo-Operating System 
+# Pseudo-Operating System
 
 <a href="https://github.com/skyepurchase/POS">
     <img src="https://github-readme-stats.vercel.app/api/pin/?username=skyepurchase&repo=POS&theme=dracula&hide_border=false"/>
@@ -20,7 +20,7 @@ The first project listed on my website!
 
 ---
 
-Slow progress as I struggled to open a file in C using Clang as the compiler. 
+Slow progress as I struggled to open a file in C using Clang as the compiler.
 Switching to GCC resulted in the code working as I had assumed.
 I will look into the issue further and hopefully gain a better understanding of the differences.
 
@@ -131,4 +131,3 @@ This means that Brainf\*\*k is not "more powerful" than RMs and in fact, by the 
 However, this does not mean converting from one form to the other is easy (or possible? I'm not confident on that last point, guess I need to prove that these weird loops definitively cannot be converted ... bringing in the Halting problem :eyes:).
 
 _ALSO_ any Brainf\*\*k program can be rewritten to do the same action without using this "hack" but the onous is now on the programmer. This is a common feature of compilers, computers are dumb they can only do so much, think about your code!
-
