@@ -26,7 +26,7 @@ def run():
             "Nice try, but that is not the passcode! If you are meant to find something try typing it in again.",
         )
 
-    expiration = datetime.now(timezone.utc) + timedelta(hours=1)
+    expiration = datetime.now(timezone.utc) + timedelta(days=1)
     payload = {
         "exp": expiration.timestamp(),
         "newsletter_id": n_id,
