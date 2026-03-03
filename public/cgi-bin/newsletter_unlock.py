@@ -1,10 +1,17 @@
 #!/usr/bin/python3
 # Wrapper for the newsletter main method
 
+import os
+import sys
 from wrap import wrap  # Safe import
 
 
 def run():
+    # An ugly hack
+    newsletter_path = os.path.join(os.path.dirname(__file__), "newsletter")
+    if newsletter_path not in sys.path:
+        sys.path.append(newsletter_path)
+
     # All unsafe code that will now be caught
     from datetime import datetime, timedelta, timezone
     from http_lib import params, generate_token, HttpResponse
