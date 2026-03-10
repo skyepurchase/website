@@ -45,9 +45,10 @@ logger.setLevel(logging.DEBUG)
 
 
 class HttpResponse(Exception):
-    def __init__(self, status, text):
+    def __init__(self, status: int, content: str, content_type: str = "text/html"):
         self.status = status
-        self.text = text
+        self.content = content
+        self.content_type = content_type
 
 
 def format_html(html: str, replacements: dict) -> str:
@@ -57,22 +58,29 @@ def format_html(html: str, replacements: dict) -> str:
     return html
 
 
-def render_status(status: int, msg: str) -> None:
-    if status > 499:
-        logger.warning("HTTP status %s: %s", status, msg)
+def render_status(res: HttpResponse) -> None:
+    if res.status > 499:
+        logger.warning(f"HTTP status {res.status}: {res.content}")
 
     try:
         html = open("status_template.html", "r").read()
-        values = {"STATUS": str(status), "MESSAGE": msg}
-        print(f"Status: {status}")
+    except IOError as e:
+        # Logging for debugging later
+        logger.debug("Error loading status template")
+        # Let wrap deal with it
+        raise e
+
+    values = {"STATUS": str(res.status), "MESSAGE": res.content}
+
+    print(f"Status: {res.status}")
+    if res.content_type == "text/plain":
         print("Content-Type: text/html")
         print()
         print(format_html(html, values))
-    except Exception as e:
-        # Logging for debugging later
-        logger.debug("Error displaying HTTP status:\n%s", traceback.format_exc())
-        # Let wrap deal with it
-        raise e
+    else:
+        print(f"Content-Type: {res.content_type}")
+        print()
+        print(res.content)
 
 
 def generate_token(data: dict) -> str:
@@ -232,7 +240,7 @@ def params(method: str = "GET") -> dict:
             for content in raw_data.split("&"):
                 s = content.split("=")
                 if len(s) != 2:
-                    render_status(400, "Invalid input")
+                    render_status(HttpResponse(400, "Invalid input"))
                     quit(1)
 
                 param_data[s[0]] = unquote(s[1].replace("+", " "))
@@ -308,7 +316,7 @@ def params(method: str = "GET") -> dict:
                 python_multipart.parse_form(headers, data_stream, on_field, on_file)
             except Exception:
                 logger.debug("Multipart parsing failed:\n%s", traceback.format_exc())
-                render_status(400, "Multipart parsing error")
+                render_status(HttpResponse(400, "Multipart parsing error"))
                 quit(1)
 
         logger.info(param_data)

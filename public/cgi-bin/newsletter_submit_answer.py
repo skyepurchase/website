@@ -15,7 +15,6 @@ def run():
     # All unsafe code that will now be caught
     from http_lib import params, get_cookies, verify_token, HttpResponse
     from newsletter.endpoints import answer
-    from newsletter.utils.type_hints import NewsletterException
 
     cookies = get_cookies()
     if "newsletter_token" not in cookies:
@@ -30,10 +29,9 @@ def run():
 
     parameters = params("POST")
 
-    try:
-        answer(parameters)
-    except NewsletterException as res:
-        raise HttpResponse(res.status, res.msg)
+    res = answer(parameters)
+
+    raise HttpResponse(res.status, res.content, content_type=res.content_type)
 
 
 wrap(run)
