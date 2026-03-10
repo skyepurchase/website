@@ -10,7 +10,7 @@ def wrap(func, *args, **kwargs):
         try:
             func(*args, **kwargs)
         except HttpResponse as e:
-            render_status(e.status, e.text)
+            render_status(e)
 
     except Exception:
         print("Status: 500")
