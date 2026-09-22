@@ -2,7 +2,7 @@
 *.pdf
 
 # Compiled pages
-public/blog/
+public/blog/*/
 public/images/
 public/projects/pos/
 
