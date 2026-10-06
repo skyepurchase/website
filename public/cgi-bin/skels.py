@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/home/atp45/.venv/bin/python3
 # Wrapper for the newsletter main method
 
 from wrap import wrap  # Safe import
